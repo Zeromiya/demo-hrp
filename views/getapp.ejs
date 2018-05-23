@@ -1,0 +1,71 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Demo HRP</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">HRP</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="/appointment">APPOINTMENTS</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/faq">FAQ</a>
+      </li>
+    </ul>
+    <span class="navbar-text">
+    <a class="p-1 text-light" >Welcome Mr.Test</a>
+    <a class="p-2 text-light" href="/faq">Logout</a>
+    </span>
+  </div>
+</nav>
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Demo</h1>
+</div>
+
+<div class="container">
+    <h1>Your Appointment Details</h1>
+    <hr>
+    <p>Appointment by: <%= name %></p>
+    <p>Doctor Name : <input id="dname" type="text" class="form-control" value= "<%= resulty.rows[i][k] %>" note= "<%= resulty.rows[i][k] %>" ></p>
+    <p>Date : <%= date %></p>
+    <p>Department : <%= deptname %></p>
+    <button name="update" id="<%=resulty.rows[i][0] %>" type="button" class="btn btn-primary">Get Appointment</button>
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+       <p style="text-align: center">21594096</p>
+        <p style="text-align: center">Göksen Umut GÜLER</p>
+    </footer>
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
