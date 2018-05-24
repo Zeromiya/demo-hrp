@@ -25,8 +25,8 @@ function insert(values) {
                 }
                 try{
                     conn.execute(
-                    "INSERT INTO hrp_appointments VALUES (:id, :pid, :did, :when, :fee)",
-                    {id: {val: values.id}, pid: {val: values.pid}, did: {val: values.did}, when: {val: date}, fee: {val: 50} }, {autoCommit: true}, // 'bind by name' syntax
+                    "INSERT INTO hrp_appointments VALUES (NULL, :pid, :did, :when, :fee)",
+                    { pid: {val: values.pid}, did: {val: values.did}, when: {val: date}, fee: {val: 50} }, {autoCommit: true}, // 'bind by name' syntax
                     function (err, result) {
                         if (!err) {
                             queryDetails = {"status": "ok", "rows_affected": result.rowsAffected};
@@ -67,8 +67,8 @@ function faq() {
                 }
                 try{
                     conn.execute(
-                        `SELECT hrp_department.name as "Department Name", hrp_doctor.name as "Doctor Name", hrp_appointments.when as "When" FROM HRP_appointments, hrp_doctor, hrp_patient, hrp_department
-                        WHERE hrp_patient.id = hrp_appointments.pid and hrp_doctor.id = hrp_appointments.did and hrp_doctor.dept_no = hrp_department.id`,    
+                        `SELECT hrp_appointments.id, hrp_department.name as "Department Name", hrp_doctor.name as "Doctor Name", hrp_appointments.when as "When" FROM HRP_appointments, hrp_doctor, hrp_patient, hrp_department
+                        WHERE hrp_patient.id = hrp_appointments.pid and hrp_doctor.id = hrp_appointments.did and hrp_doctor.dept_no = hrp_department.id`,
                     function (err, result) {
                         if (!err) {
                             queryDetails = {"status": "ok", "result": result};
@@ -113,8 +113,8 @@ function view(id) {
                 }
                 try{
                     conn.execute(
-                        `SELECT * FROM hrp_appointments, hrp_doctor, hrp_patient, hrp_department
-                        WHERE hrp_appointments.id = :id and hrp_patient.id = hrp_appointments.pid and hrp_doctor.id = hrp_appointments.did and hrp_doctor.dept_no = hrp_department.id`,
+                        "SELECT * FROM hrp_appointments, hrp_doctor, hrp_patient, hrp_department " +
+                        "WHERE hrp_appointments.id = :id and hrp_patient.id = hrp_appointments.pid and hrp_doctor.id = hrp_appointments.did and hrp_doctor.dept_no = hrp_department.id",
                        [id],
                     function (err, result) {
                         if (!err) {
@@ -143,31 +143,86 @@ function view(id) {
         })
 }
 
+function getDocs() {
+    return new Promise(function (resolve, reject) {
+        var connectionStatus;
+        oracledb.getConnection(
+            {
+                user: dbConfig.user,
+                password: dbConfig.password,
+                connectString: dbConfig.connectString
+            },
+            function (err, conn) {
+                if (err) {
+                    connectionStatus = {"status": "failed"};
+                    console.log("err");
+                    reject({"connectionDetails": conn, "connectionStatus": connectionStatus, "err": err});
+                    return;
+                }
+                try{
+                    conn.execute(
+                        `SELECT hrp_doctor.id, HRP_DOCTOR.name as "Doctor Name", HRP_DEPARTMENT.name "Department Name", img FROM hrp_doctor, hrp_department
+                        WHERE hrp_doctor.dept_no = hrp_department.id`,
+                        function (err, result) {
+                            if (!err) {
+                                queryDetails = {"status": "ok", "result": result};
+                                if (conn) {
+                                    try {
+                                        conn.close();
+                                    } catch (err) {
+                                        reject({"connectionDetails": conn, "connectionStatus": connectionStatus, "err": err});
+                                    }
+                                }
+                                resolve(result);
+
+                            } else {
+                                queryDetails = {"status": "failed"};
+                                console.log(err);
+                                reject({"connectionDetails": conn, "connectionStatus": connectionStatus, "err": err});
+                            }
+                        });
+                }catch (err){
+                    console.log(err);
+                    reject({"connectionDetails": conn, "connectionStatus": connectionStatus, "err": err});
+                }
+            });
+    })
+}
+
 router.get('/', function (req, res, next) {
-    faq().then((result)=>{       
+    faq().then((result)=>{
+        console.log(result)
         res.render('appointments', {resulty:result})
     }).catch((err)=> {
         res.json(err);
     })
 });
 router.get('/view/:id', function (req, res, next) {
-    var id = req.params.id
-
+    var id = req.params.id;
     view(id).then((result)=>{
-        res.render('appointment', {fee:result.rows[0][4], deptname: result.rows[0][18], dname:result.rows[0][6], date:result.rows[0][3], name: result.rows[0][12]})
+        console.log(result.rows[0]);
+        res.render('appointment', {fee:result.rows[0][4], deptname: result.rows[0][12], dname:result.rows[0][6], date:result.rows[0][3], name: result.rows[0][12]})
     }).catch((err)=> {
         res.json(err);
     })
 });
+router.get('/get', function (req, res, next) {
+    getDocs().then((result)=>{
+        res.render('getAppointment', {resulty:result})
+    }).catch((err)=> {
+        res.json(err);
+    })
+});
+
 router.get('/create', function (req, res, next) {
 
-    insert({id : req.param('id'), did : req.param('did'), pid : req.param('pid'), when : req.param('when')})
+    insert({did : req.param('did'), pid : 1, when : req.param('when')})
         .then(function (succ) {
             //console.log(req.params)
-            res.json(succ);
+            res.json('succ');
         })
         .catch(function (err) {
             res.json(err);
-    });
+        });
 });
 module.exports = router;

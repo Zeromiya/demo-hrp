@@ -46,7 +46,7 @@
     <table class="table">
         <thead>
              <tr>
-                <% for (var k = 0; k < Object.keys(resulty.metaData).length; k++) { %>
+                <% for (var k = 1; k < Object.keys(resulty.metaData).length; k++) { %>
                     <th>
                     <%= resulty.metaData[k].name %>
                     </th>
@@ -58,15 +58,19 @@
         <tbody>
             <% for (var i = 0; i < resulty.rows.length; i++) { %>
                 <tr>
-                    <% for (var k = 0,enable = true; k < resulty.rows[i].length; k++, enable=true) { %>
+                    <% for (var k = 1,enable = true; k < resulty.rows[i].length; k++, enable=true) { %>
                         <td>
                         <% if(!resulty.metaData[k].name.includes("DIST") && !resulty.metaData[k].name.includes("STATUS")){ %>
-                        <input id="<%= resulty.metaData[k].name %><%= resulty.rows[i][0] %>"type="text" class="form-control" value= "<%= resulty.rows[i][k] %>" note= "<%= resulty.rows[i][k] %>" disabled>
+                            <a id="<%= resulty.metaData[k].name %><%= resulty.rows[i][0] %>"type="text" class="form-control" ><%= resulty.rows[i][k] %></a>
                         <% }else{ %>
-                        <input id="<%= resulty.metaData[k].name %><%= resulty.rows[i][0]%>" type="text" class="form-control" value= "<%= resulty.rows[i][k] %>" note= "<%= resulty.rows[i][k] %>" >
+                            <a id="<%= resulty.metaData[k].name %><%= resulty.rows[i][0]%>" type="text" class="form-control" ><%= resulty.rows[i][k] %></a>
                         <% } %>
+
                         </td>
-                        <% } %>
+                    <% } %>
+                    <td>
+                        <a name="butts" id = "<%= resulty.rows[i][0] %>" class="btn btn-primary" href="/appointment/view/<%= resulty.rows[i][0] %>">View Appointment</a>
+                    </td>
                 </tr>
                 <% } %>
         </tbody>
@@ -84,6 +88,5 @@
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
 <script src="js/bootstrap.min.js"></script>
-<script src="js/main.js"></script>
 </body>
 </html>

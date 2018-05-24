@@ -31,7 +31,7 @@ function faq() {
                                 try {
                                     conn.close();
                                 } catch (err) {
-                                    console.log("1")//DEBUG FLAG
+                                    console.log("1");//DEBUG FLAG
                                     reject({"connectionDetails": conn, "connectionStatus": connectionStatus, "err": err});
                                 }
                             }
@@ -39,12 +39,12 @@ function faq() {
                             
                         } else {
                             queryDetails = {"status": "failed"};
-                            console.log(err)
+                            console.log(err);
                             reject({"connectionDetails": conn, "connectionStatus": connectionStatus, "err": err});
                         }
                     });
                 }catch (err){
-                    console.log(err)
+                    console.log(err);
                     reject({"connectionDetails": conn, "connectionStatus": connectionStatus, "err": err});
                 }
             });
